@@ -2,6 +2,7 @@
 //메모리 초과로 실패함
 #include <iostream>
 #include <queue> 
+#include<string.h>
 
 #define endl '\n'
 #define MAX 100
@@ -11,35 +12,17 @@ using namespace std;
 int len;
 int max_len=1;
 int min_len=100;
-int data_Ar[MAX][MAX],data_cp[MAX][MAX],len_Ar[MAX];
+int** data_Ar;
+int** data_cp;
+// int data_Ar[MAX][MAX];
+// int data_cp[MAX][MAX];
+int len_Ar[MAX];
 
 typedef struct{
     int x;
     int y;
 }st;
 queue<st> q;
-
-
-void Input()
-{
-    //1. 개수 입력 받기 
-    
-    cin>>len;
-
-    //데이터 입력 받기
-    for (int i=0;i<len;i++)
-    {
-        for(int j=0;j<len;j++)
-        {
-            cin>>data_Ar[i][j];
-            //int data=data_Ar[i][j];
-            if(data_Ar[i][j]>max_len) max_len=data_Ar[i][j];
-            else if(data_Ar[i][j]<min_len) min_len=data_Ar[i][j];
-            len_Ar[data_Ar[i][j]]=1;
-        }
-    }
-
-}
 
 void Copy_MAP(){
     for (int i = 0; i < len; i++){
@@ -50,7 +33,7 @@ void Copy_MAP(){
 }
 
 void bfs(int i,int j,int depth){
-
+    cout<<"bfs:"<<' '<<i<<' '<<j<<' '<<depth<<endl;
     q.push({i,j});
     while(!q.empty()){
         i=q.front().x;
@@ -58,21 +41,20 @@ void bfs(int i,int j,int depth){
         q.pop();
         data_cp[i][j]=-1;
 
-        if(data_cp[i][j+1]>depth){
+        if( j<len and  data_cp[i][j+1]>depth){
             q.push({i,j+1});
         }
-        if (data_cp[i+1][j]>depth){
+        if (i<len and data_cp[i+1][j]>depth){
             q.push({i+1,j});
         }
-        if(data_cp[i][j-1]>depth) {
+        if(j>0 and data_cp[i][j-1]>depth) {
             q.push({i,j-1});
         }
-        if(data_cp[i-1][j]>depth){
+        if(i>0 and data_cp[i-1][j]>depth){
             q.push({i-1,j});
         }
     }
 }
-
 
 void Solve() {
     int max_count=0;
@@ -104,7 +86,34 @@ int main(void)
     cin.tie(NULL);
     ios_base::sync_with_stdio(false);
     
-    Input();
+    //1. 개수 입력 받기 
+    cin>>len;
+
+    data_Ar= new int *[MAX];
+    for (int i=0;i<MAX;++i){
+        data_Ar[i]=new int[MAX];
+        //memset(data_Ar[i], 0, sizeof(int)*len);
+    }
+
+    data_cp= new int *[MAX];
+    for (int i=0;i<MAX;++i){
+        data_cp[i]=new int[MAX];
+        //memset(data_cp[i], 0, sizeof(int)*len);
+    }
+
+    //데이터 입력 받기
+    for (int i=0;i<len;i++)
+    {
+        for(int j=0;j<len;j++)
+        {
+            cin>>data_Ar[i][j];
+            //int data=data_Ar[i][j];
+            data_Ar[i][j]>max_len? max_len=data_Ar[i][j]: max_len;
+            data_Ar[i][j]<min_len? min_len=data_Ar[i][j]: min_len;
+            len_Ar[data_Ar[i][j]]=1;
+        }
+    }
+
     Solve();
 
     return 0;
