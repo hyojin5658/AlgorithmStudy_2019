@@ -3,7 +3,6 @@
 #include <iostream>
 #include <stack>
 #include <vector>
-//#include <time.h>
 #include <algorithm>
 
 #define endl "\n"
@@ -31,26 +30,6 @@ vector<point> wall_list;
 vector<point> virus;
 vector<points> wall_comb;
 
-// void print_DataArray(){
-//     cout<<"---------DataArray------"<<endl;
-//     for(int i=0;i<row;i++){
-//         for(int j=0;j<col;j++){
-//             cout<<DataArray[i][j];
-//         }
-//         cout<<endl;
-//     }
-//     cout<<"---------------"<<endl;
-// }
-// void print_Data_cp(){
-//     cout<<"-------Data_cp--------"<<endl;
-//     for(int i=0;i<row;i++){
-//         for(int j=0;j<col;j++){
-//             cout<<Data_cp[i][j];
-//         }
-//         cout<<endl;
-//     }
-//     cout<<"---------------"<<endl;
-// }
 void Input()
 {
     cin>>row>>col;
@@ -91,30 +70,17 @@ void MakeWall( points point)
 
 int DFS(int i,int j)
 {
-    //cout<<"DFS:" <<i <<' '<<j <<endl;
+
     Data_cp[i][j]=2;
-    // if (Data_cp[i][j+1]==0 and j<col){
-    //     s.push({i,j+1});
-    // }
-    // if (Data_cp[i+1][j]==0 and i<row){
-    //     s.push({i+1,j});
-    // }
-    // if (Data_cp[i][j-1]==0 and j!=0){
-    //     s.push({i,j-1});
-    // }
-    // if (Data_cp[i-1][j]==0 and i!=0){
-    //     s.push({i-1,j});
-    // }
+
     for(int k=0;k<4;k++){
         int nexti=i+moveXY[k].i;
         int nextj=j+moveXY[k].j;
-        //cout<<"dfs init!!! "<<nexti<<' ' <<nextj<<endl; 
 
         if (0<=nexti and nexti<row and 0<=nextj and nextj<col){
             if (Data_cp[nexti][nextj]==0)
             {
                  Data_cp[nexti][nextj]=2;
-                //cout<<"stack init!!! "<<nexti<<' ' <<nextj<<endl; 
                 s.push({nexti,nextj});
             }
         }
@@ -133,7 +99,6 @@ int DFS(int i,int j)
 void Emergency()
 {
     for (int i=0;i<virus.size();i++){
-        //cout<<"start dfs"<<endl;
         DFS(virus.at(i).i,virus.at(i).j);
     }
 }
@@ -161,27 +126,19 @@ int Solution(){
         MakeWall(data);
         Emergency();
         int safe=CheckSafe(); 
-        //print_Data_cp();
-        if (safe>max_safe){ 
-            max_safe=safe;
-            max_data=data;
-        }
-        //max_safe=max(max_safe, safe);
+
+        max_safe=max(max_safe, safe);
     
     }
-    //cout<<"check wall"<<" / "<<max_data.point1.i<<' '<<max_data.point1.j<<" / "<<max_data.point2.i<<' '<<max_data.point2.j<<" / "<<max_data.point3.i<<' '<<max_data.point3.j<<endl;
     wall_comb.clear();
     return max_safe;
 }
 
 int main()
 {
-    //clock_t now=clock();
     Input();
     int result=Solution();
-    //clock_t end=clock();
     cout<<result<<endl;
-    //printf("Time : %lf\n",(double)(end - now)/CLOCKS_PER_SEC);
     
     return 0;
 }
